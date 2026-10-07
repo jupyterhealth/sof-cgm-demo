@@ -85,7 +85,9 @@ def _section_head(title: str, *controls: widgets.Widget) -> widgets.HBox:
 def _patient_header(view: dict) -> widgets.HTML:
     patient = view["patient"]
     facts = "".join(
-        f'<span class="jh-fact">{escape(fact)}</span>' for fact in patient["facts"] if fact
+        f'<span class="jh-fact">{escape(fact)}</span>'
+        for fact in patient["facts"]
+        if fact
     )
     return _html(
         '<header class="jh-patient" aria-label="Patient context">'
@@ -107,10 +109,10 @@ def _context_card(card: dict) -> str:
         reading = (
             '<div class="jh-compare">'
             f'<span class="jh-compare-prev">{escape(card["previous"])}'
-            f'<i>{escape(card["previous_date"])}</i></span>'
+            f"<i>{escape(card['previous_date'])}</i></span>"
             '<span class="jh-compare-arrow" aria-hidden="true">→</span>'
             f'<span class="jh-compare-now">{escape(card["current"])}'
-            f'<i>{escape(card["current_date"])}</i></span>'
+            f"<i>{escape(card['current_date'])}</i></span>"
             "</div>"
         )
         delta = (
@@ -127,7 +129,7 @@ def _context_card(card: dict) -> str:
         delta = f'<span class="jh-stable">{escape(card["detail"])}</span>'
     return (
         '<article class="jh-lab-card">'
-        f'<h3>{escape(card["label"])}</h3>'
+        f"<h3>{escape(card['label'])}</h3>"
         f"{reading}"
         f'<div class="jh-lab-delta">{delta}</div>'
         "</article>"
@@ -158,12 +160,12 @@ def _band_strip_html(session: dict) -> str:
         segments.append(
             f'<div class="jh-agp-seg jh-band-{key}" style="flex-grow:{max(percent, 1.4):.3f}" '
             f'title="{escape(label)} {percent:.1f}%">'
-            f'<span>{percent:.0f}%</span></div>'
+            f"<span>{percent:.0f}%</span></div>"
         )
         rows.append(
             '<div class="jh-agp-range-row">'
             f'<i class="jh-band-{key}" aria-hidden="true"></i>'
-            f'<b>{escape(label)}</b>'
+            f"<b>{escape(label)}</b>"
             f'<span class="jh-bounds">{escape(bounds)}</span>'
             f'<span class="jh-goal">{escape(goal)}</span>'
             f'<span class="jh-pct">{percent:.1f}%</span>'
@@ -201,18 +203,24 @@ def _metrics_html(session: dict) -> str:
     metrics = session["metrics"]
     context = (
         '<div class="jh-agp-context">'
-        f'<div><span>Period</span><b>{escape(session["period"])}</b></div>'
-        f'<div><span>Time CGM active</span><b>'
-        f'{_fmt(session["time_active_percent"], "%", 1)}</b></div>'
+        f"<div><span>Period</span><b>{escape(session['period'])}</b></div>"
+        f"<div><span>Time CGM active</span><b>"
+        f"{_fmt(session['time_active_percent'], '%', 1)}</b></div>"
         "</div>"
     )
     rows = "".join(
         (
-            _metric_row("Average glucose", _fmt(metrics["mean_mg_dl"], "mg/dL", 0),
-                        "Goal <154 mg/dL"),
+            _metric_row(
+                "Average glucose",
+                _fmt(metrics["mean_mg_dl"], "mg/dL", 0),
+                "Goal <154 mg/dL",
+            ),
             _metric_row("GMI", _fmt(metrics["gmi_percent"], "%", 1), "Goal <7%"),
-            _metric_row("Glucose variability", _fmt(metrics["cv_percent"], "%", 1),
-                        "Goal ≤36% (CV)"),
+            _metric_row(
+                "Glucose variability",
+                _fmt(metrics["cv_percent"], "%", 1),
+                "Goal ≤36% (CV)",
+            ),
         )
     )
     return (
@@ -235,7 +243,9 @@ def _agp_report_html(session: dict) -> str:
 def _profile_panel(profile: go.FigureWidget) -> widgets.VBox:
     return widgets.VBox(
         [
-            _html('<div class="jh-agp-head jh-agp-head-wide">24-hour glucose profile</div>'),
+            _html(
+                '<div class="jh-agp-head jh-agp-head-wide">24-hour glucose profile</div>'
+            ),
             profile,
         ],
         layout=FULL_WIDTH,
@@ -261,11 +271,16 @@ def build_dashboard(view: dict) -> widgets.VBox:
     initial = sessions[0]["name"]
 
     metrics_by = {session["name"]: _agp_report_html(session) for session in sessions}
-    profile_by = {session["name"]: _figure(agp_profile_figure(session)) for session in sessions}
-    profile_panels = {session["name"]: _profile_panel(profile_by[session["name"]])
-                      for session in sessions}
-    explorer_by = {name: _figure(explorer_figure(explorer))
-                   for name, explorer in explorers.items()}
+    profile_by = {
+        session["name"]: _figure(agp_profile_figure(session)) for session in sessions
+    }
+    profile_panels = {
+        session["name"]: _profile_panel(profile_by[session["name"]])
+        for session in sessions
+    }
+    explorer_by = {
+        name: _figure(explorer_figure(explorer)) for name, explorer in explorers.items()
+    }
     bounds_by = {name: session_bounds(explorer) for name, explorer in explorers.items()}
 
     report_widget = _html(metrics_by[initial])

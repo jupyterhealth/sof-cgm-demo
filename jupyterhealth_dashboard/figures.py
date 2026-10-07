@@ -82,31 +82,54 @@ def agp_profile_figure(session: dict, height: int = 430) -> go.Figure:
     if minutes:
         figure.add_trace(
             go.Scatter(
-                x=minutes, y=p95, mode="lines", line={"width": 0},
-                hoverinfo="skip", showlegend=False,
+                x=minutes,
+                y=p95,
+                mode="lines",
+                line={"width": 0},
+                hoverinfo="skip",
+                showlegend=False,
             )
         )
         figure.add_trace(
             go.Scatter(
-                x=minutes, y=p05, mode="lines", fill="tonexty", fillcolor=AGP95_FILL,
-                line={"width": 0}, name="5th–95th", hoverinfo="skip",
+                x=minutes,
+                y=p05,
+                mode="lines",
+                fill="tonexty",
+                fillcolor=AGP95_FILL,
+                line={"width": 0},
+                name="5th–95th",
+                hoverinfo="skip",
             )
         )
         figure.add_trace(
             go.Scatter(
-                x=minutes, y=p75, mode="lines", line={"width": 0},
-                hoverinfo="skip", showlegend=False,
+                x=minutes,
+                y=p75,
+                mode="lines",
+                line={"width": 0},
+                hoverinfo="skip",
+                showlegend=False,
             )
         )
         figure.add_trace(
             go.Scatter(
-                x=minutes, y=p25, mode="lines", fill="tonexty", fillcolor=AGP75_FILL,
-                line={"width": 0}, name="25th–75th", hoverinfo="skip",
+                x=minutes,
+                y=p25,
+                mode="lines",
+                fill="tonexty",
+                fillcolor=AGP75_FILL,
+                line={"width": 0},
+                name="25th–75th",
+                hoverinfo="skip",
             )
         )
         figure.add_trace(
             go.Scatter(
-                x=minutes, y=p50, mode="lines", name="Median (50th)",
+                x=minutes,
+                y=p50,
+                mode="lines",
+                name="Median (50th)",
                 line={"color": DUKE_NAVY, "width": 2.4},
                 hovertemplate="%{text}<br>median %{y:.0f} mg/dL<extra></extra>",
                 text=[_minute_label(value) for value in minutes],
@@ -114,12 +137,23 @@ def agp_profile_figure(session: dict, height: int = 430) -> go.Figure:
         )
 
     # Right-edge percentile labels, mirroring the conventional report.
-    for rank, series in (("95%", p95), ("75%", p75), ("50%", p50), ("25%", p25), ("5%", p05)):
+    for rank, series in (
+        ("95%", p95),
+        ("75%", p75),
+        ("50%", p50),
+        ("25%", p25),
+        ("5%", p05),
+    ):
         if not series:
             continue
         figure.add_annotation(
-            x=1440, y=series[-1], text=rank, xanchor="left", showarrow=False,
-            xshift=6, font={"size": 11, "color": MUTED},
+            x=1440,
+            y=series[-1],
+            text=rank,
+            xanchor="left",
+            showarrow=False,
+            xshift=6,
+            font={"size": 11, "color": MUTED},
         )
 
     figure.add_hline(y=180, line={"color": TARGET_LINE, "width": 1})
@@ -179,7 +213,11 @@ def explorer_figure(explorer: dict, height: int = 680) -> go.Figure:
         shared_xaxes=True,
         vertical_spacing=0.06,
         row_heights=[0.56, 0.21, 0.23],
-        subplot_titles=("Glucose · mg/dL", "Activity · steps / 30 min", "Sleep stages · minutes"),
+        subplot_titles=(
+            "Glucose · mg/dL",
+            "Activity · steps / 30 min",
+            "Sleep stages · minutes",
+        ),
     )
 
     glucose = explorer["glucose"]
@@ -218,7 +256,12 @@ def explorer_figure(explorer: dict, height: int = 680) -> go.Figure:
                     "line": {"width": 1, "color": MEAL_BORDER},
                 },
                 customdata=[
-                    [_meal_label(row.label), row.meal_type, row.carbohydrate_g, row.calories_kcal]
+                    [
+                        _meal_label(row.label),
+                        row.meal_type,
+                        row.carbohydrate_g,
+                        row.calories_kcal,
+                    ]
                     for row in meals.itertuples()
                 ],
                 hovertemplate=(
