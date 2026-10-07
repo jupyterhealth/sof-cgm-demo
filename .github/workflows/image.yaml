@@ -30,7 +30,7 @@ permissions:
 
 env:
   # only publish from this repo, not forks
-  PUBLISHING_REPO: jupyterhealth/jupyterhealth-sof-provider-template
+  PUBLISHING_REPO: https://github.com/jupyterhealth/sof-cgm-demo
   REGISTRY: ghcr.io
 
 jobs:
