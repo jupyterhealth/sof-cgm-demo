@@ -30,7 +30,7 @@ permissions:
 
 env:
   # only publish from this repo, not forks
-  PUBLISHING_REPO: https://github.com/jupyterhealth/sof-cgm-demo
+  PUBLISHING_REPO: jupyterhealth/sof-cgm-demo
   REGISTRY: ghcr.io
 
 jobs:
