@@ -26,3 +26,8 @@ repos:
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
+  # strip notebook output
+  - repo: https://github.com/kynan/nbstripout
+    rev: 34071b78c181af3bf5af955c1426466e096fc3db  # frozen: 0.9.1
+    hooks:
+      - id: nbstripout
