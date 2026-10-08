@@ -121,7 +121,7 @@ def _run_dashboard(tmp_path, monkeypatch, jhe_client):
     # Keep plotly headless (no browser). Empty string means "no renderer".
     pio.renderers.default = ""
 
-    nb = nbformat.read(str(PROJECT_ROOT / "dashboard.ipynb"), as_version=4)
+    nb = nbformat.read(str(PROJECT_ROOT / "tests/dashboard.ipynb"), as_version=4)
     namespace: dict = {}
     for cell in nb.cells:
         if cell.cell_type == "code":
