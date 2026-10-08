@@ -38,7 +38,7 @@ if os.environ.get("SMART_REDIRECT_URI"):
 # --- Authentication ---
 # The SMART/OAuth flow IS the auth layer.
 # This authenticator ensures that every Jupyter request is authorized by the SMART launch.
-c.SxerverApp.identity_provider_class = (
+c.ServerApp.identity_provider_class = (
     "jupyter_smart_on_fhir.server_extension.SMARTIdentityProvider"
 )
 
