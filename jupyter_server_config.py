@@ -2,8 +2,11 @@
 # Loads the SMART-on-FHIR launch extension and Voilà in one server.
 
 import os
+from threading import Thread
 
 from dotenv import load_dotenv
+
+from keep_cloned import keep_fresh, repo_path
 
 c = get_config()  # noqa
 
@@ -35,17 +38,13 @@ if os.environ.get("SMART_REDIRECT_URI"):
 # --- Authentication ---
 # The SMART/OAuth flow IS the auth layer.
 # This authenticator ensures that every Jupyter request is authorized by the SMART launch.
-c.ServerApp.identity_provider_class = (
+c.SxerverApp.identity_provider_class = (
     "jupyter_smart_on_fhir.server_extension.SMARTIdentityProvider"
 )
 
 # --- Voilà (renders dashboard.ipynb as the provider-facing app) ---
-c.VoilaConfiguration.file_allowlist = ["dashboard.ipynb"]
 c.VoilaConfiguration.strip_sources = True
 c.VoilaConfiguration.theme = "light"
-
-# EHR launch carries no 'next', so point the server root at the Voilà-rendered notebook.
-c.ServerApp.default_url = "/voila/render/dashboard.ipynb"
 
 # --- Embed in the EHR iframe ---
 # Default frame-ancestors 'self' blocks EHR embedding; allow the configured origin(s).
@@ -55,3 +54,14 @@ c.ServerApp.tornado_settings = {
         + os.environ.get("EHR_IFRAME_ORIGIN", "https://app.medplum.com")
     }
 }
+
+
+# Load notebook from demos repo
+nb_in_repo = os.environ.get("DEMO_PATH", "dashboards/cgm-demo.ipynb")
+demo_notebook = str(repo_path / nb_in_repo)
+
+Thread(target=keep_fresh, daemon=True).start()
+
+# EHR launch carries no 'next', so point the server root at the Voilà-rendered notebook.
+c.ServerApp.default_url = f"/voila/render/{demo_notebook}"
+c.VoilaConfiguration.file_allowlist = [demo_notebook]
