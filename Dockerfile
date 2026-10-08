@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY pyproject.toml ./
 COPY provider_app ./provider_app
+COPY jupyterhealth_dashboard ./jupyterhealth_dashboard
 RUN pip install --no-cache-dir .
 
 COPY dashboard.ipynb jupyter_server_config.py voila.json ./
